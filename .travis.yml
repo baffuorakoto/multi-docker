@@ -1,0 +1,15 @@
+sudo: required
+services: 
+ - docker
+
+before_install: 
+  - docker build -t dilliongee/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run dilliongee/react-test npm test -- --coverage
+
+after_success: 
+  - docker build -t dilliongee/multi-client ./client
+  - docker build -t dilliongee/multi-nginx ./nginx
+  - docker build -t dilliongee/multi-server ./server
+  - docker build -t dilliongee/multi-worker ./worker
